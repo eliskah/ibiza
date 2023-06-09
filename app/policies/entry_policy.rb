@@ -4,23 +4,23 @@ class EntryPolicy < ApplicationPolicy
   end
 
   def show?
-    user.admin? || user.has_read_permission?(record)
+    user.admin? || permitted?(user: user, record: record, action: :show)
   end
 
   def create?
-    user.admin? || user.has_write_permission?(record)
+    user.admin?
   end
 
   def new?
-    user.admin? || user.has_write_permission?(record)
+    user.admin?
   end
 
   def update?
-    user.admin? || user.has_write_permission?(record)
+    user.admin? || permitted?(user: user, record: record, action: :write)
   end
 
   def edit?
-    user.admin? || user.has_write_permission?(record)
+    user.admin? || permitted?(user: user, record: record, action: :write)
   end
 
   def destroy?

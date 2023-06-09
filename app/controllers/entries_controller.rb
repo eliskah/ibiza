@@ -4,7 +4,6 @@ class EntriesController < ApplicationController
   # GET /entries or /entries.json
   def index
     @entries = policy_scope(Entry).order(created_at: :desc)
-    authorize @entries
   end
 
   # GET /entries/1 or /entries/1.json

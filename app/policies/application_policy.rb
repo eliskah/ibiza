@@ -3,6 +3,8 @@
 class ApplicationPolicy
   attr_reader :user, :record
 
+  delegate :permitted?, to: :permission_gateway
+
   def initialize(user, record)
     @user = user
     @record = record
@@ -34,6 +36,10 @@ class ApplicationPolicy
 
   def destroy?
     false
+  end
+
+  def permission_gateway
+    ::PermissionGateway.new
   end
 
   class Scope

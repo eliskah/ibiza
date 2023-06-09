@@ -10,3 +10,7 @@
   role = i.odd? ? :admin : :user
   User.create(email: "#{name}@example.com", role: role, password: "iamsecure")
 end
+
+30.times do |i|
+  Entry.create(title: "This is entry ##{i+1}")
+end

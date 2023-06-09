@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+["alice", "bob", "cindy", "daniel"].each_with_index do |name, i|
+  role = i.odd? ? :admin : :user
+  User.create(email: "#{name}@example.com", role: role, password: "iamsecure")
+end

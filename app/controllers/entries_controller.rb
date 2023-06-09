@@ -3,25 +3,30 @@ class EntriesController < ApplicationController
 
   # GET /entries or /entries.json
   def index
-    @entries = Entry.all
+    @entries = policy_scope(Entry).order(created_at: :desc)
+    authorize @entries
   end
 
   # GET /entries/1 or /entries/1.json
   def show
+    authorize @entry
   end
 
   # GET /entries/new
   def new
     @entry = Entry.new
+    authorize @entry
   end
 
   # GET /entries/1/edit
   def edit
+    authorize @entry
   end
 
   # POST /entries or /entries.json
   def create
     @entry = Entry.new(entry_params)
+    authorize @entry
 
     respond_to do |format|
       if @entry.save
@@ -36,6 +41,7 @@ class EntriesController < ApplicationController
 
   # PATCH/PUT /entries/1 or /entries/1.json
   def update
+    authorize @entry
     respond_to do |format|
       if @entry.update(entry_params)
         format.html { redirect_to entry_url(@entry), notice: "Entry was successfully updated." }

@@ -48,8 +48,14 @@ class ApplicationPolicy
       @scope = scope
     end
 
+    delegate :permitted?, to: :permission_gateway
+
     def resolve
       raise NotImplementedError, "You must define #resolve in #{self.class}"
+    end
+
+    def permission_gateway
+      ::PermissionGateway.new
     end
 
     private

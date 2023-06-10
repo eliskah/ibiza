@@ -4,7 +4,7 @@ class EntryPolicy < ApplicationPolicy
   end
 
   def show?
-    user.admin? || permitted?(user: user, record: record, action: :show)
+    user.admin? || permitted?(user: user, record: record, action: :view)
   end
 
   def create?
@@ -16,18 +16,18 @@ class EntryPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || permitted?(user: user, record: record, action: :write)
+    user.admin? || permitted?(user: user, record: record, action: :edit)
   end
 
   def edit?
-    user.admin? || permitted?(user: user, record: record, action: :write)
+    user.admin? || permitted?(user: user, record: record, action: :edit)
   end
 
   def destroy?
     user.admin?
   end
 
-  class Scope
+  class Scope < ApplicationPolicy::Scope
     attr_reader :user, :scope
     def initialize(user, scope)
       @user  = user
@@ -38,8 +38,8 @@ class EntryPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
-        # TBD
-        scope.none
+        permitted = scope.select(:id).to_a.select { |entry| permitted?(user: user, record: entry, action: :view)} 
+        scope.where(id: permitted.pluck(:id))
       end
     end
   end

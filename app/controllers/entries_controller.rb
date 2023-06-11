@@ -3,12 +3,13 @@ class EntriesController < ApplicationController
 
   # GET /entries or /entries.json
   def index
-    @entries = policy_scope(Entry).order(created_at: :desc)
+    @entries = policy_scope(Entry).order(id: :asc)
   end
 
   # GET /entries/1 or /entries/1.json
   def show
     authorize @entry
+    @entry_permissions = pg.entry_permissions(@entry)
   end
 
   # GET /entries/new
@@ -71,5 +72,9 @@ class EntriesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def entry_params
       params.require(:entry).permit(:title)
+    end
+
+    def pg
+      PermissionGateway.new
     end
 end

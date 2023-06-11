@@ -9,6 +9,17 @@ class AuthzedClient
     )
   end
 
+  def resource_permissions(resource)
+    response = @_client.permissions_service.read_relationships(
+      Authzed::Api::V1::LookupSubjectsRequest.new(
+        consistency: Authzed::Api::V1::Consistency.new(fully_consistent: true),
+        # TODO: Change based on resource class
+        resource: AuthzedClient.object(type: "entry", id: resource.id.to_s)
+      )
+    )
+    response.to_a
+  end
+
   def write(relationships)
     updates = relationships.map do |(resource, relation, subject)|
       update(resource: resource, relation: relation, subject: subject)

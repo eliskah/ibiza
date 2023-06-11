@@ -8,6 +8,12 @@ class PermissionGateway
     authz.check(resource: entry(record.id), subject: user(user.id), permission: action)
   end
 
+  def entry_permissions(entry)
+    authz.resource_permissions(entry).map do |p|
+      parse_permission(p.to_h)
+    end.group_by(&:first)
+  end
+
   def permit_write!(user:, entry:)
     authz.write([[entry(entry.id), "writer", user(user.id)]])
   end
@@ -24,5 +30,14 @@ class PermissionGateway
 
     def entry(id)
       AuthzedClient.object(type: "entry", id: id)
+    end
+
+    def parse_permission(permission)
+      subject = permission[:relationship][:subject][:object]
+      subject_klass = subject[:object_type].titleize.constantize
+      [
+        permission[:relationship][:relation],
+        subject_klass.find_by(id: subject[:object_id])
+      ]
     end
 end

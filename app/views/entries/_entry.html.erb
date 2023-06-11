@@ -3,13 +3,7 @@
     <strong>Title:</strong>
     <%= entry.title %>
   </p>
-  <p>
-    <strong>Users with access:</strong>
-  </p>
-  <p>
-  <% (@entry_permissions || {}).each_pair do |level, users| %>
-    <strong><%= level %></strong>:
-    <%= users.map { |u| u.last.email }.join(", ")  %>
+  <% if @entry_permissions %>
+    <%= render "permissions" %>
   <% end %>
-</p>
 </div>

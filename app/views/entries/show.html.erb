@@ -3,8 +3,20 @@
 <%= render @entry %>
 
 <div>
-  <%= link_to "Edit this entry", edit_entry_path(@entry) %> |
-  <%= link_to "Back to entries", entries_path %>
+  <ul>
+    <% if @policy.edit? %>
+    <li>
+      <%= link_to "Edit this entry", edit_entry_path(@entry) %>
+    </li>
+    <% end %>
+    <% if @policy.index? %>
+      <li>
+        <%= link_to "Back to entries", entries_path %>
+      </li>
+    <% end %>
+  </ul>
 
-  <%= button_to "Destroy this entry", @entry, method: :delete %>
+  <% if @policy.destroy? %>
+    <%= button_to "Destroy this entry", @entry, method: :delete %>
+  <% end %>
 </div>

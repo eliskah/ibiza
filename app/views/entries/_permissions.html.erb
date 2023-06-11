@@ -1,0 +1,9 @@
+<p>
+  <strong>Users access:</strong>
+</p>
+<% (@entry_permissions || {}).each_pair do |level, users| %>
+  <p>
+    <strong><%= level.titleize %></strong>:
+    <%= users.map { |u| u.last.email }.join(", ")  %>
+  </p>
+<% end %>

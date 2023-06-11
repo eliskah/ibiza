@@ -1,5 +1,7 @@
 class EntriesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_entry, only: %i[ show edit update destroy ]
+  helper_method :policy
 
   # GET /entries or /entries.json
   def index
@@ -10,6 +12,7 @@ class EntriesController < ApplicationController
   def show
     authorize @entry
     @entry_permissions = pg.entry_permissions(@entry)
+    @policy = EntryPolicy.new(current_user, @entry)
   end
 
   # GET /entries/new

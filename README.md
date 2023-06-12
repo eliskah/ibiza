@@ -18,6 +18,11 @@ Running Spice DB locally. To install, follow this guide, don't change anything r
 
 https://authzed.com/docs/spicedb/installing#docker
 
+Running Elasticsearch locally. Follow these steps:
+
+https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docker.html
+
+
 ## Configuration
 
 First, run this snippet:

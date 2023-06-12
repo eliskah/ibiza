@@ -44,6 +44,8 @@ gem "bootsnap", require: false
 gem "devise"
 gem 'pundit'
 gem 'authzed'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
 
 # Use Sass to process CSS
 # gem "sassc-rails"

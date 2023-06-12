@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   # GET /entries or /entries.json
   def index
     @policy = EntryPolicy.new(current_user, Entry.new)
-    @entries = Entry.search(params[:query], current_user)
+    @entries = Entry.search(params[:search], current_user)
   end
 
   # GET /entries/1 or /entries/1.json

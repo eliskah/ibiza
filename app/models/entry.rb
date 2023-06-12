@@ -54,7 +54,7 @@ class Entry < ApplicationRecord
             auth_query(subject)
           ]
         }
-      }, sort: {}
+      }, sort: {}, size: 50
     }
 
     unless query.blank?
@@ -72,7 +72,7 @@ class Entry < ApplicationRecord
     else
       @search_definition[:sort]  = { updated_at: "asc" }
     end
-    __elasticsearch__.search(@search_definition).records.records
+    __elasticsearch__.search(@search_definition).records
   end
 
   def self.auth_query(subject)

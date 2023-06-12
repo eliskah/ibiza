@@ -5,4 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   enum role: [ :admin, :user ]
+
+  def to_permission_token
+    "#{self.class.name}##{id}"
+  end
 end

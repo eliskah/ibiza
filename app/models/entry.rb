@@ -10,41 +10,91 @@ class Entry < ApplicationRecord
 
   settings index: { number_of_shards: 1, number_of_replicas: 0 } do
     mapping do
-      indexes :title, type: 'text' do
-        indexes :title,     analyzer: 'snowball'
-        indexes :tokenized, analyzer: 'simple'
+      indexes :title, type: "text" do
+        indexes :title,     analyzer: "snowball"
+        indexes :tokenized, analyzer: "simple"
       end
-      indexes :created_at, type: 'date'
-      indexes :updated_at, type: 'date'
-      indexes :writers, type: 'keyword'
-      indexes :readers, type: 'keyword'
+      indexes :created_at, type: "date"
+      indexes :updated_at, type: "date"
+      indexes :writers, type: "keyword"
+      indexes :readers, type: "keyword"
     end
   end
 
   def as_indexed_json(options={})
     self.as_json.tap do |payload|
-      payload['readers'] = readers
-      payload['writers'] = writers
+      payload["readers"] = readers
+      payload["writers"] = writers
     end
   end
 
   def readers
-    (permissions["reader"] || []).map { |s| to_permission_token(s.last) }
+    (permissions["reader"] || []).map { |u| u.to_permission_token }
   end
 
   def writers
-    (permissions["writer"] || []).map { |s| to_permission_token(s.last) }
+    (permissions["writer"] || []).map { |u| u.to_permission_token }
   end
 
   def permissions
-    @permissions ||= pg.entry_permissions(self)
+    @permissions ||= pg.entry_permissions(self).inject({}) do |all, (level, users)|
+      all.merge(level => users.map(&:last))
+    end
   end
 
   def pg
     @pg ||= PermissionGateway.new
   end
 
-  def to_permission_token(subject)
-    "#{subject.class.name}##{subject.id}"
+  def self.search(query, subject, options={})
+    @search_definition = {
+      query: {
+        bool: {
+          must: [
+            auth_query(subject)
+          ]
+        }
+      }, sort: {}
+    }
+
+    unless query.blank?
+      @search_definition[:query][:bool][:must] << {
+        match: {
+          title: query
+        }
+      }
+    else
+      @search_definition[:query][:bool][:must] = { match_all: {} }
+    end
+
+    if options[:desc] == "true"
+      @search_definition[:sort]  = { updated_at: "desc" }
+    else
+      @search_definition[:sort]  = { updated_at: "asc" }
+    end
+    __elasticsearch__.search(@search_definition).records.records
+  end
+
+  def self.auth_query(subject)
+    { 
+      bool: {
+        should: [
+          {
+            term: {
+              readers: {
+                value: subject.to_permission_token
+              }
+            }
+          },
+          {
+            term: {
+              writers: {
+                value: subject.to_permission_token
+              }
+            }
+          }
+        ]
+      }
+    }
   end
 end

@@ -50,12 +50,14 @@ class Entry < ApplicationRecord
     @search_definition = {
       query: {
         bool: {
-          must: [
-            auth_query(subject)
-          ]
+          must: []
         }
       }, sort: {}, size: 50
     }
+
+    unless subject.admin?
+      @search_definition[:query][:bool][:must] << auth_query(subject)
+    end
 
     unless query.blank?
       @search_definition[:query][:bool][:must] << {

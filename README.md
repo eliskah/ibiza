@@ -2,6 +2,12 @@
 
 This is a demo app showing how to implement a rails app with role and attribute based permission system.
 
+Business logic:
+* There are admins and users
+* Admins can do anything
+* Users can only see content where they are readers or writers
+* Users can only edit/destroy content where they are writers
+
 * Ruby version
 
 2.7.5
@@ -40,6 +46,8 @@ resp = client.schema_service.write_schema(
   Authzed::Api::V1::WriteSchemaRequest.new(schema: schema)
 )
 ```
+
+Then setup the app with `bin/setup`
 
 * Database creation
 

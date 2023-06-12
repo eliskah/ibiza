@@ -64,7 +64,7 @@ class Entry < ApplicationRecord
         }
       }
     else
-      @search_definition[:query][:bool][:must] = { match_all: {} }
+      @search_definition[:query][:bool][:must] << { match_all: {} }
     end
 
     if options[:desc] == "true"

@@ -2,23 +2,23 @@
 
 This is a demo app showing how to implement a rails app with role and attribute based permission system.
 
-Business logic:
+## Business logic:
 * There are admins and users
 * Admins can do anything
 * Users can only see content where they are readers or writers
 * Users can only edit/destroy content where they are writers
 
-* Ruby version
+## Ruby version
 
 2.7.5
 
-* System dependencies
+## System dependencies
 
-Running Spice DB locally. To install, follow this guide:
+Running Spice DB locally. To install, follow this guide, don't change anything regarding credentials:
 
 https://authzed.com/docs/spicedb/installing#docker
 
-* Configuration
+## Configuration
 
 First, run this snippet:
 
@@ -47,16 +47,4 @@ resp = client.schema_service.write_schema(
 )
 ```
 
-Then setup the app with `bin/setup`
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Then setup the app with `bin/setup` and run `rails server`. See the `db/seeds.rb` file to see the initial content.

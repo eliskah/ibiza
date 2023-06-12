@@ -5,6 +5,7 @@ class EntriesController < ApplicationController
 
   # GET /entries or /entries.json
   def index
+    @policy = EntryPolicy.new(current_user, Entry.new)
     @entries = policy_scope(Entry).order(id: :asc)
   end
 
